@@ -257,14 +257,14 @@ const DataSources = () => {
 
       <footer className="bg-white border-t border-gray-200 mt-12">
         <div className="max-w-7xl mx-auto px-4 py-6">
-          <p className="text-center text-gray-500 text-sm">DAO Governance Research Dashboard — Data Sources & Methodology</p>
-          <div className="flex justify-center mt-4 space-x-4">
-            <a href="/" className="text-sm text-blue-600">Dashboard Home</a>
-            <a href="/methodology" className="text-sm text-blue-600">Research Methodology</a>
-            <a href="/about" className="text-sm text-blue-600">About the Project</a>
-          </div>
+            <p className="text-center text-gray-500 text-sm">DAO Governance Research Dashboard — Data Sources & Methodology</p>
+            <div className="flex justify-center mt-4 space-x-4">
+            <Link to="/" className="text-sm text-blue-600">Dashboard Home</Link>
+            <button className="text-sm text-blue-600">Research Methodology</button>
+            <Link to="/about" className="text-sm text-blue-600">About the Project</Link>
+            </div>
         </div>
-      </footer>
+    </footer>
     </div>
   );
 };

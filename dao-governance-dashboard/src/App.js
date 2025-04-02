@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import DataSources from './DataSources';
+import About from './about';
 
 // Real data from research document
 const participationData = [
@@ -694,10 +695,9 @@ function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 py-6">
           <p className="text-center text-gray-500 text-sm">DAO Governance Research Dashboard — Data sources include DeepDAO, Tally, Snapshot, SEC filings</p>
           <div className="flex justify-center mt-4 space-x-4">
-            <button className="text-sm text-blue-600">About</button>
+            <Link to="/about" className="text-sm text-blue-600">About</Link>
             <button className="text-sm text-blue-600">Methodology</button>
             <Link to="/data-sources" className="text-sm text-blue-600">Data Sources</Link>
-            <button className="text-sm text-blue-600">FAQs</button>
           </div>
         </div>
       </footer>
@@ -710,6 +710,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Dashboard />} />
       <Route path="/data-sources" element={<DataSources />} />
+      <Route path="/about" element={<About />} />
     </Routes>
   );
 }
