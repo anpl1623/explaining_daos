@@ -16,6 +16,33 @@ Key Traits:
 - Ethereum DAO Primer: https://ethereum.org/en/dao/
 - Aragon DAO Framework: https://aragon.org/
 
+## Setup Guide
+
+This guide will help you set up the DAO Governance Dashboard project on your local machine.
+### Prerequisites
+
+Before you begin, ensure you have the following installed:
+- [Node.js](https://nodejs.org/) (v14.0.0 or higher)
+- [npm](https://www.npmjs.com/) (v6.0.0 or higher)
+- Git
+
+### Installation
+0. Open your bash terminal
+1. Clone the repo
+```bash
+git clone https://github.com/cekcreator/explaining_daos.git && cd dao-governance-dashboard
+```
+2. Install dependencies
+```bash
+npm install 
+```
+3. Start the server
+```bash
+npm start
+```
+4. Go to [`http://localhost:3000/`](http://localhost:3000) on your browser
+
+5. You did it
 ## Comparing DAO and Traditional Corporate Governance
 
 ### Traditional Corporate Governance
