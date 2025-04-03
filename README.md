@@ -1,3 +1,20 @@
+# Andrew and Caleb
+
+To run the website, run these commands:
+
+```
+git clone https://github.com/cekcreator/explaining_daos.git
+```
+```
+cd explaining_daos && cd dao-governance-dashboard
+```
+```
+npm i && npm start
+```
+Then in whatever browser you are using, navigate to http://localhost:3000/
+
+
+
 # DAO Governance Research
 
 ## What is a DAO?
