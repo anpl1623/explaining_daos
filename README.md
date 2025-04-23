@@ -1,5 +1,9 @@
 # DAO Governance Research
 
+#### Repo Links
+[https://github.com/cekcreator/explaining_daos](https://github.com/cekcreator/explaining_daos)\
+[https://github.com/anpl1623/explaining_daos](https://github.com/anpl1623/explaining_daos)
+
 ## What is a DAO?
 
 A Decentralized Autonomous Organization (DAO) is an entity where governance is coded into smart contracts and decisions are made collectively by token holders.
