@@ -3,6 +3,8 @@ import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import DataSources from './DataSources';
 import About from './about';
+import Methodology from './Methodology';
+import CaseStudy from './CaseStudy';
 
 // Real data from research document
 const participationData = [
@@ -83,7 +85,21 @@ const corporateOptions = ['Meta', 'Berkshire Hathaway', 'Tesla', 'Apple'];
 // Colors
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
+// Case study data mapping for the dashboard
+const caseStudyLinks = {
+  dao: [
+    { id: 'uniswap-v3', title: 'Uniswap V3 Deployment', org: 'Uniswap' },
+    { id: 'makerdao-emergency', title: 'MakerDAO Emergency Shutdown', org: 'MakerDAO' },
+    { id: 'aave-safety', title: 'Aave Safety Module', org: 'Aave' }
+  ],
+  corporate: [
+    { id: 'meta-privacy', title: 'Meta Privacy Policy Changes', org: 'Meta' },
+    { id: 'tesla-compensation', title: 'Tesla CEO Compensation Package', org: 'Tesla' }
+  ]
+};
+
 function Dashboard() {
+  const navigate = useNavigate();
   const [selectedDAO, setSelectedDAO] = useState('Uniswap');
   const [selectedCorporation, setSelectedCorporation] = useState('Meta');
   const [activeTab, setActiveTab] = useState('overview');
@@ -106,6 +122,11 @@ function Dashboard() {
   const getCorporateParticipation = () => {
     const data = participationData.find(item => item.name === selectedDAO);
     return data ? data.corporateParticipation : 70;
+  };
+
+  // Navigate to case study
+  const handleCaseStudyClick = (caseId) => {
+    navigate(`/case-study/${caseId}`);
   };
 
   // Get additional metrics
@@ -595,124 +616,208 @@ function Dashboard() {
                       {index < decisionTimelineData['DAO'].length - 1 && (
                         <div className="absolute top-8 left-4 h-6 w-0.5 bg-blue-200 z-0"></div>
                       )}
+                      </div>
+                    ))}
+                    <div className="mt-4 pt-4 border-t border-blue-200">
+                      <p className="font-medium">Total Timeline: ~17 days</p>
+                      <p className="text-sm text-gray-600 mt-1">Demonstrates the efficiency of DAO governance for standard proposals</p>
                     </div>
-                  ))}
-                  <div className="mt-4 pt-4 border-t border-blue-200">
-                    <p className="font-medium">Total Timeline: ~17 days</p>
-                    <p className="text-sm text-gray-600 mt-1">Demonstrates the efficiency of DAO governance for standard proposals</p>
+                  </div>
+                  <div className="p-4 bg-green-50 rounded-lg">
+                    <h3 className="text-lg font-semibold mb-2">Corporate Process: {selectedCorporation}</h3>
+                    {decisionTimelineData['Corporate'].map((step, index) => (
+                      <div key={`corp-step-${index}`} className="relative">
+                        <div className="flex items-center mb-3">
+                          <div className="w-8 h-8 rounded-full bg-green-300 flex items-center justify-center mr-3 z-10">
+                            {index + 1}
+                          </div>
+                          <div>
+                            <p className="font-medium">{step.name}</p>
+                            <p className="text-sm text-gray-600">{step.days} days</p>
+                          </div>
+                        </div>
+                        {index < decisionTimelineData['Corporate'].length - 1 && (
+                          <div className="absolute top-8 left-4 h-6 w-0.5 bg-green-200 z-0"></div>
+                        )}
+                      </div>
+                    ))}
+                    <div className="mt-4 pt-4 border-t border-green-200">
+                      <p className="font-medium">Total Timeline: ~105 days</p>
+                      <p className="text-sm text-gray-600 mt-1">Reflects the formal, regulated nature of corporate governance</p>
+                    </div>
                   </div>
                 </div>
-                <div className="p-4 bg-green-50 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-2">Corporate Process: {selectedCorporation}</h3>
-                  {decisionTimelineData['Corporate'].map((step, index) => (
-                    <div key={`corp-step-${index}`} className="relative">
-                      <div className="flex items-center mb-3">
-                        <div className="w-8 h-8 rounded-full bg-green-300 flex items-center justify-center mr-3 z-10">
-                          {index + 1}
-                        </div>
-                        <div>
-                          <p className="font-medium">{step.name}</p>
-                          <p className="text-sm text-gray-600">{step.days} days</p>
+              </div>
+            )}
+  
+            {activeTab === 'outcomes' && (
+              <div>
+                <h2 className="text-2xl font-bold mb-6">Governance Outcome Analysis</h2>
+                <p className="mb-6 text-gray-600">Success rates of proposals by category (%).</p>
+                
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart
+                    data={outcomeAnalysisData}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="daoSuccess" name="DAO Success Rate %" fill="#0088FE" />
+                    <Bar dataKey="corporateSuccess" name="Corporate Success Rate %" fill="#00C49F" />
+                  </BarChart>
+                </ResponsiveContainer>
+                
+                <div className="mt-8">
+                  <h3 className="text-xl font-semibold mb-4">Featured Case Studies</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {caseStudyLinks.dao.slice(0, 2).map(study => (
+                      <div 
+                        key={study.id}
+                        onClick={() => handleCaseStudyClick(study.id)}
+                        className="border border-blue-200 rounded-lg p-4 case-study-card cursor-pointer"
+                      >
+                        <h4 className="font-medium text-blue-700">{study.title}</h4>
+                        <p className="text-sm text-gray-600 mt-2">{study.org}</p>
+                        <div className="mt-3 flex justify-between items-center">
+                          <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">DAO Case Study</span>
+                          <span className="text-blue-600 text-sm">View Details →</span>
                         </div>
                       </div>
-                      {index < decisionTimelineData['Corporate'].length - 1 && (
-                        <div className="absolute top-8 left-4 h-6 w-0.5 bg-green-200 z-0"></div>
-                      )}
-                    </div>
-                  ))}
-                  <div className="mt-4 pt-4 border-t border-green-200">
-                    <p className="font-medium">Total Timeline: ~105 days</p>
-                    <p className="text-sm text-gray-600 mt-1">Reflects the formal, regulated nature of corporate governance</p>
+                    ))}
+                    {caseStudyLinks.corporate.slice(0, 2).map(study => (
+                      <div 
+                        key={study.id}
+                        onClick={() => handleCaseStudyClick(study.id)}
+                        className="border border-green-200 rounded-lg p-4 case-study-card cursor-pointer"
+                      >
+                        <h4 className="font-medium text-green-700">{study.title}</h4>
+                        <p className="text-sm text-gray-600 mt-2">{study.org}</p>
+                        <div className="mt-3 flex justify-between items-center">
+                          <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Corporate Case Study</span>
+                          <span className="text-green-600 text-sm">View Details →</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-6 text-center">
+                    <Link to="/case-studies" className="inline-block px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded text-gray-700">
+                      View All Case Studies
+                    </Link>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-
-          {activeTab === 'outcomes' && (
-            <div>
-              <h2 className="text-2xl font-bold mb-6">Governance Outcome Analysis</h2>
-              <p className="mb-6 text-gray-600">Success rates of proposals by category (%).</p>
-              
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart
-                  data={outcomeAnalysisData}
-                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="daoSuccess" name="DAO Success Rate %" fill="#0088FE" />
-                  <Bar dataKey="corporateSuccess" name="Corporate Success Rate %" fill="#00C49F" />
-                </BarChart>
-              </ResponsiveContainer>
-              
-              <div className="mt-8">
-                <h3 className="text-xl font-semibold mb-4">Featured Case Studies</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="border border-blue-200 rounded-lg p-4 case-study-card">
-                    <h4 className="font-medium text-blue-700">Uniswap V3 Deployment</h4>
-                    <p className="text-sm text-gray-600 mt-2">Major protocol upgrade governance process</p>
-                    <div className="mt-3 flex justify-between items-center">
-                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">DAO Case Study</span>
-                      <button className="text-blue-600 text-sm">View Details →</button>
-                    </div>
-                  </div>
-                  <div className="border border-green-200 rounded-lg p-4 case-study-card">
-                    <h4 className="font-medium text-green-700">Meta Privacy Policy Changes</h4>
-                    <p className="text-sm text-gray-600 mt-2">Corporate governance affecting billions</p>
-                    <div className="mt-3 flex justify-between items-center">
-                      <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Corporate Case Study</span>
-                      <button className="text-green-600 text-sm">View Details →</button>
-                    </div>
-                  </div>
-                  <div className="border border-blue-200 rounded-lg p-4 case-study-card">
-                    <h4 className="font-medium text-blue-700">MakerDAO Emergency Shutdown</h4>
-                    <p className="text-sm text-gray-600 mt-2">Crisis governance during market volatility</p>
-                    <div className="mt-3 flex justify-between items-center">
-                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">DAO Case Study</span>
-                      <button className="text-blue-600 text-sm">View Details →</button>
-                    </div>
-                  </div>
-                  <div className="border border-green-200 rounded-lg p-4 case-study-card">
-                    <h4 className="font-medium text-green-700">Tesla Compensation Package</h4>
-                    <p className="text-sm text-gray-600 mt-2">Controversial corporate vote</p>
-                    <div className="mt-3 flex justify-between items-center">
-                      <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Corporate Case Study</span>
-                      <button className="text-green-600 text-sm">View Details →</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </main>
-
-      <footer className="bg-white border-t border-gray-200 mt-12">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <p className="text-center text-gray-500 text-sm">DAO Governance Research Dashboard — Data sources include DeepDAO, Tally, Snapshot, SEC filings</p>
-          <div className="flex justify-center mt-4 space-x-4">
-            <Link to="/about" className="text-sm text-blue-600">About</Link>
-            <button className="text-sm text-blue-600">Methodology</button>
-            <Link to="/data-sources" className="text-sm text-blue-600">Data Sources</Link>
+            )}
           </div>
-        </div>
-      </footer>
-    </div>
-  );
-}
-
-function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<Dashboard />} />
-      <Route path="/data-sources" element={<DataSources />} />
-      <Route path="/about" element={<About />} />
-    </Routes>
-  );
-}
-
-export default App;
+        </main>
+  
+        <footer className="bg-white border-t border-gray-200 mt-12">
+          <div className="max-w-7xl mx-auto px-4 py-6">
+            <p className="text-center text-gray-500 text-sm">DAO Governance Research Dashboard — Data sources include DeepDAO, Tally, Snapshot, SEC filings</p>
+            <div className="flex justify-center mt-4 space-x-4">
+              <Link to="/about" className="text-sm text-blue-600">About</Link>
+              <Link to="/methodology" className="text-sm text-blue-600">Methodology</Link>
+              <Link to="/data-sources" className="text-sm text-blue-600">Data Sources</Link>
+              <Link to="/case-studies" className="text-sm text-blue-600">Case Studies</Link>
+            </div>
+          </div>
+        </footer>
+      </div>
+    );
+  }
+  
+  // Case studies overview page
+  function CaseStudies() {
+    const navigate = useNavigate();
+    
+    const handleCaseStudyClick = (caseId) => {
+      navigate(`/case-study/${caseId}`);
+    };
+  
+    return (
+      <div className="min-h-screen bg-gray-100">
+        <header className="bg-white shadow-md">
+          <div className="max-w-7xl mx-auto px-4 py-6">
+            <h1 className="text-3xl font-bold text-gray-900">DAO Governance Dashboard</h1>
+            <p className="mt-2 text-gray-600">Case Study Analysis</p>
+          </div>
+        </header>
+  
+        <main className="max-w-7xl mx-auto px-4 py-6">
+          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 className="text-2xl font-bold mb-4">Governance Case Studies</h2>
+            <p className="text-gray-700 mb-6">
+              Explore in-depth case studies of significant governance events in both DAOs and traditional corporations.
+              These analyses highlight the practical application of governance processes, challenges faced, and outcomes achieved.
+            </p>
+  
+            {/* DAO Case Studies */}
+            <h3 className="text-xl font-semibold mb-4 border-b pb-2">DAO Governance Cases</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              {caseStudyLinks.dao.map(study => (
+                <div 
+                  key={study.id}
+                  onClick={() => handleCaseStudyClick(study.id)}
+                  className="border border-blue-200 rounded-lg p-4 hover:bg-blue-50 transition duration-300 cursor-pointer"
+                >
+                  <h4 className="font-medium text-blue-700">{study.title}</h4>
+                  <p className="text-sm text-gray-600 mt-2">{study.org}</p>
+                  <div className="mt-3 flex justify-between items-center">
+                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">DAO Case Study</span>
+                    <span className="text-blue-600 text-sm">View Details →</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+  
+            {/* Corporate Case Studies */}
+            <h3 className="text-xl font-semibold mb-4 border-b pb-2">Corporate Governance Cases</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {caseStudyLinks.corporate.map(study => (
+                <div 
+                  key={study.id}
+                  onClick={() => handleCaseStudyClick(study.id)}
+                  className="border border-green-200 rounded-lg p-4 hover:bg-green-50 transition duration-300 cursor-pointer"
+                >
+                  <h4 className="font-medium text-green-700">{study.title}</h4>
+                  <p className="text-sm text-gray-600 mt-2">{study.org}</p>
+                  <div className="mt-3 flex justify-between items-center">
+                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Corporate Case Study</span>
+                    <span className="text-green-600 text-sm">View Details →</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </main>
+  
+        <footer className="bg-white border-t border-gray-200 mt-12">
+          <div className="max-w-7xl mx-auto px-4 py-6">
+            <p className="text-center text-gray-500 text-sm">DAO Governance Research Dashboard — Case Study Analysis</p>
+            <div className="flex justify-center mt-4 space-x-4">
+              <Link to="/" className="text-sm text-blue-600">Dashboard Home</Link>
+              <Link to="/data-sources" className="text-sm text-blue-600">Data Sources</Link>
+              <Link to="/methodology" className="text-sm text-blue-600">Research Methodology</Link>
+            </div>
+          </div>
+        </footer>
+      </div>
+    );
+  }
+  
+  function App() {
+    return (
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/data-sources" element={<DataSources />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/methodology" element={<Methodology />} />
+        <Route path="/case-studies" element={<CaseStudies />} />
+        <Route path="/case-study/:caseId" element={<CaseStudy />} />
+      </Routes>
+    );
+  }
+  
+  export default App;
